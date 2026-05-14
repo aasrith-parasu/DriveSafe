@@ -6,8 +6,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { db } from '../../firebase';
 
-const SERVER_URL      = 'http://192.168.1.96:5000/analyze';
-const SPEED_URL       = 'http://192.168.1.96:5000/speed';
+const SERVER_URL      = 'http://192.168.1.148:5000/analyze';
+const SPEED_URL       = 'http://192.168.1.148:5000/speed';
 const FRAME_MS        = 800;
 
 // Accelerometer: phone at rest reads ~1G due to gravity.
