@@ -10,13 +10,34 @@ import math
 app = Flask(__name__)
 CORS(app)
 
+# ── Auto-download shape predictor if missing ──────────────────────────────────
+DAT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'shape_predictor_68_face_landmarks.dat')
+
+def _download_dat():
+    """Download the 68-point landmark model from dlib's official source if not present."""
+    if os.path.exists(DAT_PATH):
+        return
+    import urllib.request, bz2
+    url = 'http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2'
+    bz2_path = DAT_PATH + '.bz2'
+    print('[CV] Downloading shape_predictor_68_face_landmarks.dat (~100 MB)...')
+    try:
+        urllib.request.urlretrieve(url, bz2_path)
+        with bz2.open(bz2_path, 'rb') as f_in, open(DAT_PATH, 'wb') as f_out:
+            f_out.write(f_in.read())
+        os.remove(bz2_path)
+        print('[CV] Download complete ✓')
+    except Exception as e:
+        print(f'[CV] Download failed: {e}')
+
+_download_dat()
+
 # ── Try to load dlib for 68-point landmarks ───────────────────────────────────
 try:
     import dlib
     DLIB_AVAILABLE = True
     detector = dlib.get_frontal_face_detector()
-    DAT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            'shape_predictor_68_face_landmarks.dat')
     if os.path.exists(DAT_PATH):
         predictor = dlib.shape_predictor(DAT_PATH)
         LANDMARKS_AVAILABLE = True

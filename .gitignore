@@ -34,6 +34,9 @@ yarn-error.*
 .env
 .env*.local
 
+# large model file — downloaded automatically at runtime
+shape_predictor_68_face_landmarks.dat
+
 # typescript
 *.tsbuildinfo
 
