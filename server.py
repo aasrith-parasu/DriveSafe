@@ -36,10 +36,10 @@ eye_cascade  = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xm
 # ── State ─────────────────────────────────────────────────────────────────────
 gaze_away_frames = 0
 drowsy_frames    = 0
-GAZE_AWAY_THRESH = 4
-GAZE_X_THRESH    = 0.30
-EAR_THRESH       = 0.21
-DROWSY_THRESH    = 5
+GAZE_AWAY_THRESH = 8      # needs 8 consecutive frames looking away (~6.4s) before flagging
+GAZE_X_THRESH    = 0.45   # wider tolerance — minor glances left/right won't trigger
+EAR_THRESH       = 0.18   # slightly lower = harder to trigger drowsiness
+DROWSY_THRESH    = 8      # needs more consecutive low-EAR frames before flagging
 
 speed_cache: dict = {}
 
@@ -468,7 +468,9 @@ def check_speed():
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
     print('DriveSafe CV server starting...')
     print(f'  dlib:      {DLIB_AVAILABLE}')
     print(f'  landmarks: {LANDMARKS_AVAILABLE}')
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    print(f'  port:      {port}')
+    app.run(host='0.0.0.0', port=port, debug=False)
