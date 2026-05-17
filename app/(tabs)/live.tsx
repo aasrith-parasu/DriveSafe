@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 import { db } from '../../firebase';
 
-const BASE_URL        = process.env.EXPO_PUBLIC_SERVER_URL ?? 'http://192.168.1.148:5000';
+const BASE_URL        = process.env.EXPO_PUBLIC_SERVER_URL ?? 'https://drivesafe-qgm7.onrender.com';
 const SERVER_URL      = `${BASE_URL}/analyze`;
 const SPEED_URL       = `${BASE_URL}/speed`;
 const FRAME_MS        = 800;

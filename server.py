@@ -12,7 +12,6 @@ CORS(app)
 # ── OpenCV Haar cascades ──────────────────────────────────────────────────────
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 eye_cascade  = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
-nose_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_mcs_nose.xml')
 
 # ── Attention tracking ────────────────────────────────────────────────────────
 gaze_away_frames = 0
@@ -89,7 +88,7 @@ def get_speed_limit(lat, lon):
 # CV overlay
 # ─────────────────────────────────────────────────────────────────────────────
 
-def draw_overlay(frame, faces, eyes_list, nose_list, gaze_offset, attention_ok):
+def draw_overlay(frame, faces, eyes_list, gaze_offset, attention_ok):
     h, w = frame.shape[:2]
     GREEN  = (0, 255, 80)
     CYAN   = (0, 255, 255)
@@ -119,10 +118,7 @@ def draw_overlay(frame, faces, eyes_list, nose_list, gaze_offset, attention_ok):
         cv2.circle(frame, (cx, cy), ew//2, CYAN, 1)
         cv2.circle(frame, (cx, cy), 2, CYAN, -1)
 
-    # Nose
-    for (nx, ny, nw, nh) in nose_list:
-        cv2.rectangle(frame, (nx, ny), (nx+nw, ny+nh), CYAN, 1)
-        cv2.putText(frame, 'NOSE', (nx, ny-4), cv2.FONT_HERSHEY_SIMPLEX, 0.3, CYAN, 1)
+    # Nose — removed (haarcascade_mcs_nose not in headless OpenCV)
 
     # Gaze arrow
     if faces and gaze_offset is not None:
@@ -180,7 +176,6 @@ def analyze():
     attention_ok  = True
     events        = []
     eyes_list     = []
-    nose_list     = []
     gaze_offset   = None
     gaze_x        = 0.0
 
@@ -192,11 +187,6 @@ def analyze():
         raw_eyes = eye_cascade.detectMultiScale(roi_gray, 1.05, 2, minSize=(10, 10))
         for (ex, ey, ew, eh) in raw_eyes:
             eyes_list.append((fx+ex, fy+ey, ew, eh))
-
-        # Nose
-        raw_nose = nose_cascade.detectMultiScale(roi_gray, 1.1, 3, minSize=(10, 10))
-        for (nx, ny, nw, nh) in raw_nose[:1]:
-            nose_list.append((fx+nx, fy+ny, nw, nh))
 
         # Gaze from eye positions
         if len(raw_eyes) >= 2:
@@ -219,7 +209,7 @@ def analyze():
         attention_ok     = False
         events.append('no_face')
 
-    frame = draw_overlay(frame, faces, eyes_list, nose_list, gaze_offset, attention_ok)
+    frame = draw_overlay(frame, faces, eyes_list, gaze_offset, attention_ok)
 
     _, buf        = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 78])
     annotated_b64 = base64.b64encode(buf).decode('utf-8')
