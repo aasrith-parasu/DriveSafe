@@ -26,6 +26,7 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "permissions": [
+        "CAMERA",
         "CAMERA"
       ]
     },
@@ -58,6 +59,12 @@
         "projectId": "366cda74-eb2a-4dff-94d4-65354e3456e4"
       }
     },
-    "owner": "aasrithparasu"
+    "owner": "aasrithparasu",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/366cda74-eb2a-4dff-94d4-65354e3456e4"
+    }
   }
 }
